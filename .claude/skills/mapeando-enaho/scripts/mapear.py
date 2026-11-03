@@ -12,6 +12,12 @@ import pandas as pd
 
 TINTA, TINTA_SUAVE, FONDO = "#1F1F1F", "#6B6B6B", "#FFFFFF"
 MEDIDAS = {"pobreza": ("pobre", "Pobreza monetaria"), "extrema": ("pobre_extremo", "Pobreza extrema")}
+# Pobreza monetaria 2024 por departamento (referencias/pobreza_departamento_2024.csv de la sesión 16).
+REFERENCIA_2024 = {
+    "01": 25.7, "02": 22.8, "03": 24.0, "04": 15.8, "05": 32.8, "06": 45.0, "07": 33.9, "08": 18.5, "09": 33.4,
+    "10": 39.0, "11": 6.0, "12": 18.5, "13": 30.2, "14": 14.0, "15": 27.1, "16": 43.0, "17": 11.1, "18": 11.0,
+    "19": 39.0, "20": 31.9, "21": 39.9, "22": 22.0, "23": 24.0, "24": 26.9, "25": 27.1,
+}
 
 
 def main() -> None:
@@ -48,6 +54,10 @@ def main() -> None:
     for codigo in ("07", "15"):  # Callao y Lima van separados
         if codigo not in set(mapa.FIRST_IDDP):
             raise SystemExit(f"Falta el departamento {codigo} en el GeoJSON")
+    if a.anio == 2024 and a.medida == "pobreza":
+        distintos = {c: (v, REFERENCIA_2024[c]) for c, v in zip(tabla.departamento, tabla.pct) if v != REFERENCIA_2024[c]}
+        if distintos:
+            raise SystemExit(f"No replica la referencia 2024 (calculado, referencia): {distintos}")
 
     fig, ax = plt.subplots(figsize=(7.5, 9.5), facecolor=FONDO)
     mapa.plot(
@@ -69,7 +79,8 @@ def main() -> None:
     ].to_csv(carpeta / nombre.replace(".png", ".csv"), index=False)
 
     print(mapa.sort_values("pct", ascending=False)[["FIRST_IDDP", "NOMBDEP", "pct"]].to_string(index=False))
-    print(f"\n25 departamentos con dato. guardado {carpeta / nombre}")
+    comprobado = " Los 25 coinciden con la referencia 2024." if a.anio == 2024 and a.medida == "pobreza" else ""
+    print(f"\n25 departamentos con dato.{comprobado} guardado {carpeta / nombre}")
 
 
 if __name__ == "__main__":

@@ -1,16 +1,17 @@
 ---
 name: graficando-enaho
 description: Hace gráficos de barras de la pobreza monetaria o extrema de la ENAHO del INEI por área urbana y rural, sexo, grupo de edad, dominio o departamento, ponderados y con formato fijo, y los guarda como PNG en figuras/. Úsala cuando pidan graficar, comparar o visualizar la pobreza del Perú con la ENAHO.
-argument-hint: [area|sexo|edad|dominio|departamento] [pobreza|extrema]
+argument-hint: [area|sexo|edad|dominio|departamento] [pobreza|extrema] [año]
 ---
 # Graficar la ENAHO
 
-1. Si no existe `salidas/personas_2024.parquet` o `salidas/hogares_2024.parquet`, usa primero la skill
-   `limpiando-enaho`.
+1. Si no existen `salidas/personas_<año>.parquet` y `salidas/hogares_<año>.parquet` (2024 si no piden otro),
+   usa primero la skill `limpiando-enaho`.
 2. Traduce el pedido a un corte: urbano/rural → `area`; hombres/mujeres → `sexo`; niños, jóvenes, adultos
    mayores → `edad`; costa/sierra/selva o Lima Metropolitana → `dominio`; regiones → `departamento`.
    Si piden pobreza extrema, usa `--medida extrema`.
-3. Corre exactamente: `uv run ${CLAUDE_SKILL_DIR}/scripts/graficar.py --por <corte> --medida <medida>`.
+3. Corre exactamente: `uv run ${CLAUDE_SKILL_DIR}/scripts/graficar.py --por <corte> --medida <medida> --anio <año>`.
+   `--medida` solo acepta `pobreza` o `extrema`.
    Un corte por gráfico; si piden varios, corre el script una vez por corte.
 4. Responde con las cifras que imprime el script (con un decimal) y la ruta del PNG. Mira el PNG antes de
    entregarlo.

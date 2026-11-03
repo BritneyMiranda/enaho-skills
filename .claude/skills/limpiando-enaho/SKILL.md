@@ -5,11 +5,13 @@ argument-hint: [año]
 ---
 # Limpiar la ENAHO
 
-1. Si faltan `datos/966-Modulo34.zip` o `datos/966-Modulo02.zip`, usa primero la skill `descargando-enaho`.
-2. Corre exactamente: `uv run ${CLAUDE_SKILL_DIR}/scripts/limpiar.py --anio $0` (si no hay año, usa 2024).
+1. Corre exactamente: `uv run ${CLAUDE_SKILL_DIR}/scripts/limpiar.py --anio $0` (si no hay año, usa 2024;
+   hay datos de 2015 a 2024). Si dice que faltan los zip, usa primero la skill `descargando-enaho` con ese año.
    No reescribas el pipeline ni lo cambies para que pase la validación.
-3. Lee `salidas/validacion.txt`. Si dice `NO VALIDADA` o la pobreza difiere del INEI en más de 0.1 puntos,
-   detente y muestra al usuario qué chequeo falló.
+2. Lee `salidas/validacion.txt`. Si dice `NO VALIDADA` o la pobreza difiere del INEI en más de 0.1 puntos,
+   detente y muestra al usuario qué chequeo falló. Cada año se valida contra su pobreza oficial; 2024 además
+   contra hogares, residentes y pobreza extrema.
+3. Las cifras de referencia de abajo y de `reference.md` son de 2024.
 4. Bases que deja el script:
    - `salidas/personas_$0.parquet`: una fila por residente habitual. Pondera con `facpob07`.
      Úsala para sexo, edad o parentesco.

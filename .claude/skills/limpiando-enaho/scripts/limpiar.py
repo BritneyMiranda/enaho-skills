@@ -9,11 +9,20 @@ from pathlib import Path
 
 import pandas as pd
 
-CODIGOS = {2024: 966}
+# Igual que en descargando-enaho/scripts/descargar.py
+CODIGOS = {
+    2015: 498, 2016: 546, 2017: 603, 2018: 634, 2019: 687,
+    2020: 737, 2021: 759, 2022: 784, 2023: 906, 2024: 966,
+}
 LLAVES_HOGAR = ["conglome", "vivienda", "hogar"]
 LLAVES_PERSONA = LLAVES_HOGAR + ["codperso"]
-# Cifras oficiales del INEI para comparar. Solo se valida contra ellas el año que esté aquí.
-OFICIAL = {2024: {"pobreza": 27.6, "extrema": 5.5, "hogares": 33_691, "residentes": 108_664}}
+# Pobreza monetaria oficial del INEI (% de personas), contra la que se valida cada año.
+POBREZA_OFICIAL = {
+    2015: 21.8, 2016: 20.7, 2017: 21.7, 2018: 20.5, 2019: 20.2,
+    2020: 30.1, 2021: 25.9, 2022: 27.5, 2023: 29.0, 2024: 27.6,
+}
+# Conteos y pobreza extrema comprobados con los archivos; solo 2024.
+OFICIAL = {2024: {"extrema": 5.5, "hogares": 33_691, "residentes": 108_664}}
 TOLERANCIA = 0.1
 
 COLS_SUMARIA = LLAVES_HOGAR + ["ubigeo", "dominio", "estrato", "pobreza", "mieperho", "factor07"]
@@ -97,16 +106,21 @@ def main() -> None:
         ("llaves de persona únicas en miembros", not miembros.duplicated(LLAVES_PERSONA).any()),
         ("la unión no perdió ni duplicó filas", len(base) == len(personas)),
         ("toda persona encontró su hogar", (base._merge == "both").all()),
+        ("ubigeo de 6 dígitos (ceros conservados)", base.ubigeo.str.fullmatch(r"\d{6}").all()),
         ("25 departamentos", base.departamento.nunique() == 25),
         ("ninguna persona sin pobreza ni factor", base[["pobreza", "facpob07"]].notna().all().all()),
     ]
+    pobreza_oficial = POBREZA_OFICIAL.get(a.anio)
+    if pobreza_oficial is not None:
+        chequeos += [
+            (f"pobreza (sumaria) a {TOLERANCIA} pts de {pobreza_oficial} %", abs(pob_hogar - pobreza_oficial) < TOLERANCIA),
+        ]
     oficial = OFICIAL.get(a.anio)
     if oficial:
         chequeos += [
             (f"hogares = {oficial['hogares']:,}", len(sumaria) == oficial["hogares"]),
             (f"residentes habituales = {oficial['residentes']:,}", len(personas) == oficial["residentes"]),
-            (f"pobreza (sumaria) a {TOLERANCIA} pts de {oficial['pobreza']} %", abs(pob_hogar - oficial["pobreza"]) < TOLERANCIA),
-            (f"pobreza (personas) a {TOLERANCIA} pts de {oficial['pobreza']} %", abs(pob_pers - oficial["pobreza"]) < TOLERANCIA),
+            (f"pobreza (personas) a {TOLERANCIA} pts de {pobreza_oficial} %", abs(pob_pers - pobreza_oficial) < TOLERANCIA),
             (f"pobreza extrema a {TOLERANCIA} pts de {oficial['extrema']} %", abs(ext_hogar - oficial["extrema"]) < TOLERANCIA),
         ]
 
@@ -119,7 +133,8 @@ def main() -> None:
         f"pobreza, personas facpob07:     {pob_pers:.2f} %",
         f"pobreza extrema (sumaria):      {ext_hogar:.2f} %",
         f"población expandida:            {base.facpob07.sum() / 1e6:.2f} millones",
-        "" if oficial else f"AVISO: no hay cifras oficiales cargadas para {a.anio}; compara a mano con el INEI.",
+        f"pobreza oficial del INEI:       {pobreza_oficial if pobreza_oficial is not None else 'sin dato'} %",
+        "" if pobreza_oficial is not None else f"AVISO: no hay pobreza oficial cargada para {a.anio}; compara a mano con el INEI.",
         "",
     ] + [f"[{'OK' if ok else 'FALLA'}] {texto}" for texto, ok in chequeos]
     todo_ok = all(ok for _, ok in chequeos)

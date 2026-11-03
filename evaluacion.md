@@ -28,6 +28,20 @@ claude -p --disallowedTools Skill "<pedido>"      # sin skills
 Todas las corridas con skills empezaron sin `salidas/*.parquet`, así que la limpieza se rehizo y se validó cada vez.
 Las corridas sin skills se hicieron en una copia del repositorio con los mismos `datos/`: ninguna miró los microdatos.
 
+## Qué cambió al tener las skills
+
+| Aspecto | Con skills | Sin skills |
+|---|---|---|
+| Fuente de la cifra | Microdatos del INEI, limpiados y validados en la misma corrida | Intentó buscar en la web; sin permiso, se detuvo |
+| Validación | Lee `validacion.txt` (27.58 %, 108,664 residentes, unión `m:1`) antes de responder | Ninguna |
+| Encadenamiento | Graficar y mapear llamaron a `limpiando-enaho` al no hallar la base | — |
+| Archivos | Rutas fijas: `figuras/pobreza_area_2024.png`, `mapas/pobreza_departamento.png` | Ningún archivo |
+| Diseño | Un color, barras desde cero, valor escrito, fuente; mapa desde 0 con leyenda en % de personas | — |
+
+Una advertencia de método: `--disallowedTools Skill` no oculta la carpeta `.claude/`, así que Claude podría
+encontrar y correr los scripts de las skills por su cuenta. En estas corridas no pasó, pero para una comparación
+estricta conviene quitar `.claude/` de la copia sin skills.
+
 ## Lo que se corrigió
 
 - **Cusco no activó la skill en la primera corrida.** Claude respondió con un CSV que dejó una corrida anterior del

@@ -5,8 +5,11 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-# Código del portal de microdatos del INEI por año. Solo se incluyen los verificados.
-CODIGOS = {2024: 966}
+# Código del portal de microdatos del INEI por año, verificado con el nombre de la sumaria dentro de cada zip.
+CODIGOS = {
+    2015: 498, 2016: 546, 2017: 603, 2018: 634, 2019: 687,
+    2020: 737, 2021: 759, 2022: 784, 2023: 906, 2024: 966,
+}
 URL_INEI = "https://proyectos.inei.gob.pe/iinei/srienaho/descarga/STATA/{codigo}-Modulo{modulo}.zip"
 URL_GEOJSON = (
     "https://raw.githubusercontent.com/d2cml-ai/Data-Science-Python/main/"
