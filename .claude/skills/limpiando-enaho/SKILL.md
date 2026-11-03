@@ -1,6 +1,6 @@
 ---
 name: limpiando-enaho
-description: Limpia los módulos 34 (sumaria) y 02 (miembros) de la ENAHO del INEI, filtra residentes habituales, une hogares y personas, valida contra la pobreza oficial y arma bases de personas y hogares con pobreza y factor de expansión. Úsala cuando pidan limpiar, unir o analizar la ENAHO, o calcular la pobreza nacional, por departamento, área, sexo o edad.
+description: Limpia los módulos 34 (sumaria) y 02 (miembros) de la ENAHO del INEI, valida contra la pobreza oficial y arma bases de personas y hogares con pobreza y factor de expansión. Úsala siempre que pregunten una cifra de pobreza del Perú (¿cuál fue la pobreza en Cusco, Puno, Lima, en el país, en 2024?), o pidan limpiar, unir o analizar la ENAHO, aunque ya exista una tabla en mapas/ o figuras/.
 argument-hint: [año]
 ---
 # Limpiar la ENAHO
@@ -19,6 +19,9 @@ argument-hint: [año]
 6. Antes de usar una variable que no está en la base, lee [reference.md](reference.md).
 
 ## Para responder una cifra
+
+Calcúlala siempre desde las bases validadas, no desde CSV o figuras que ya existan en el proyecto: pueden ser de
+otra corrida o de otra medida.
 
 ```python
 import pandas as pd
