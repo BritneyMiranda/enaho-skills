@@ -21,7 +21,7 @@ claude -p --disallowedTools Skill "<pedido>"      # sin skills
 | Pobreza en Cusco | sin skills | — | | | — |
 | Urbana y rural | con skills | | | | |
 | Urbana y rural | sin skills | — | | | |
-| Mapa por departamento | con skills | | | | |
+| Mapa por departamento | con skills | `mapeando-enaho` → `limpiando-enaho` (sin base limpia previa) | Cajamarca 45.0 %, Ica 6.0 % | Sí, `factor07 × mieperho` | Igual al de referencia; 25 departamentos con dato |
 | Mapa por departamento | sin skills | — | | | |
 
 Para probar que las skills se encadenan, borre `salidas/*.parquet` antes de la corrida con skills.
