@@ -1,0 +1,23 @@
+ENAHO 2024 (código INEI 966)
+hogares en la sumaria:          33,691
+filas del módulo 02:            117,721
+residentes habituales:          108,664
+pobreza, sumaria factor07×mieperho: 27.58 %
+pobreza, personas facpob07:     27.53 %
+pobreza extrema (sumaria):      5.50 %
+población expandida:            34.15 millones
+
+
+[OK] llaves de hogar únicas en la sumaria
+[OK] llaves de persona únicas en miembros
+[OK] la unión no perdió ni duplicó filas
+[OK] toda persona encontró su hogar
+[OK] 25 departamentos
+[OK] ninguna persona sin pobreza ni factor
+[OK] hogares = 33,691
+[OK] residentes habituales = 108,664
+[OK] pobreza (sumaria) a 0.1 pts de 27.6 %
+[OK] pobreza (personas) a 0.1 pts de 27.6 %
+[OK] pobreza extrema a 0.1 pts de 5.5 %
+
+RESULTADO: VALIDADA
